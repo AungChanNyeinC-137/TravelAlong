@@ -63,6 +63,7 @@ const getGooglePicture = async (accessToken: string) => {
 
 export const loginWithGoogle = async () => {
   try {
+    console.log('loginWithGoogle starts')
     account.createOAuth2Session(
       OAuthProvider.Google,
       `${window.location.origin}/`,
