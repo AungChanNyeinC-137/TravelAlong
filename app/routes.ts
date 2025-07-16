@@ -5,6 +5,8 @@ export default [
 
     layout("routes/admin/adminLayout.tsx", [
         route('dashboard', 'routes/admin/dashboard.tsx'),
-        route('all-users', 'routes/admin/allUsers.tsx')
+        route('all-users', 'routes/admin/allUsers.tsx'),
+        route('trips', 'routes/admin/trips.tsx'),
+        route('trips/create', 'routes/admin/createTrip.tsx'),
     ]),
 ] satisfies RouteConfig;
