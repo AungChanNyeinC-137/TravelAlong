@@ -1,6 +1,9 @@
 import { ComboBoxComponent } from '@syncfusion/ej2-react-dropdowns'
 import { Header } from '~/components'
 import type { Route } from './+types/allUsers'
+import { comboBoxItems, selectItems } from '~/constants';
+import { formatKey } from '~/lib/utils';
+import { LayerDirective, LayersDirective, MapsComponent } from '@syncfusion/ej2-react-maps';
 
 export const loader = async () => {
   // Add 'maps' to the fields query parameter
@@ -48,11 +51,12 @@ const createTrip = ({ loaderData }: Route.ComponentProps) => {
               filtering={(e) => {
                 const query = e.text.toLowerCase();
                 e.updateData(
-                  countries.filter((country) => country.name.toLowerCase().includes(query)).map((country) => ({
-                    text: country.name,
-                    value: country.value,
-                  }))
-                )
+                  countries
+                    .filter((country) => country.name.toLowerCase().includes(query))
+                    .map((country) => ({
+                      text: country.name,
+                      value: country.value,
+                    })))
               }}
             />
           </div>
@@ -63,9 +67,53 @@ const createTrip = ({ loaderData }: Route.ComponentProps) => {
               name='Duration'
               placeholder='Enter a number of days(5,12,...)'
               className='form-input placeholder:text-gray-100'
-              onChange={(e) => handleChange('duration',Number(e.target.value))}
+              onChange={(e) => handleChange('duration', Number(e.target.value))}
             />
           </div>
+          {/* iterate through the constants to create Selects */}
+          {selectItems.map((key) => (
+            <div key={key}>
+              <label htmlFor={key}>{formatKey(key)}</label>
+              <ComboBoxComponent
+                id={key}
+                dataSource={comboBoxItems[key].map((item) => ({
+                  text: item,
+                  value: item,
+                }))}
+                fields={{ text: 'text', value: 'value' }}
+                placeholder={`Select ${formatKey(key)}`}
+                change={(e: { value: string | undefined }) => {
+                  if (e.value) {
+                    handleChange(key, e.value)
+                  }
+                }}
+                allowFiltering
+                filtering={(e) => {
+                  const query = e.text.toLowerCase();
+                  e.updateData(
+                    comboBoxItems[key]
+                      .filter((item) => item.toLowerCase().includes(query))
+                      .map((item) => ({
+                        text: item,
+                        value: item,
+                      })))
+                }}
+                className='combo-box'
+              />
+            </div>
+          ))}
+      <div>
+        <label htmlFor="location">
+          Location on the world map
+        </label>
+        <MapsComponent>
+          <LayersDirective>
+            <LayerDirective>
+              
+            </LayerDirective>
+          </LayersDirective>
+        </MapsComponent>
+      </div>
         </form>
       </section>
     </main>
